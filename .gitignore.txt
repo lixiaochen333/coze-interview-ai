@@ -1,0 +1,13 @@
+# 系统垃圾文件
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 文档临时文件
+*.tmp
+*.bak
+~$*.docx
+
+# 日志、缓存
+logs/
+cache/
