@@ -1,0 +1,27 @@
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+venv/
+.env
+
+# 系统文件
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# WPS/文档临时文件
+*.tmp
+*.bak
+~$*.docx
+*.md.txt
+
+# 日志、缓存目录
+logs/
+cache/
+
+# 编辑器配置
+.idea/
+.vscode/

@@ -1,0 +1,118 @@
+/* CSS变量定义 */
+:root{
+    --parmary-color:#1890ff;/*主题颜色*/
+    --bg-color:#f8f9fa;/*背景浅灰色*/
+    --border-color:#e8e8e8;/*边框浅灰色*/
+}
+/* 全局样式重置 */
+*{
+    margin: 0;/*清除默认的外边距*/
+    padding: 0;/*清除默认的内边距*/
+    box-sizing: border-box;/*盒模型计算方式*/
+    /* 系统字体栈 优先使用操作系统默认字体*/
+    font-family: -apple-system,BlinkMacSystemfont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+}
+
+/* 主体样式 */
+body{
+    background: var(--bg-color);/*使用定义好的背景色*/
+    min-height: 100vh;/*最小高度等于视口高度*/
+    padding-bottom: 60px;/*为底部导航留出空间*/
+}
+/*头部样式*/
+.header{
+    padding: 1.2rem 0;/*垂直内边距*/
+    background: #fff;/*白色背景*/
+    text-align: center;/*内容居中*/
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);/*底部阴影*/
+}
+.header h1{
+    color: var(--parmary-color);/*使用主题色*/
+    font-size: 1.5rem;/*24px(根据浏览器默认大小)*/
+    margin-bottom: 0.2rem;/*下方间距*/
+}
+.header p{
+    color: #666;/*中灰色文字*/
+    font-size: 0.9rem;/*14.4px*/
+}
+/* 主内容区域 */
+.main-content{
+    padding: 1.0rem;/*25px内边距*/
+}
+/*搜索面板样式*/
+.search-group{
+    background: #fff;/*白色背景*/
+    border-radius: 12px;/*圆角*/
+    padding: 1.5rem;/*内边距*/
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+/* 输入框组样式 */
+.input-group{
+    margin-bottom: 1.2rem;/*底部间距19.2px*/
+}
+.input-group input,select{
+    width: 100%;/*宽度充满容器*/
+    padding: 12px;/*内边距*/
+    border: 1px solid var(--border-color);/*边框颜色*/
+    border-radius: 8px;/*输入框圆角*/
+    font-size: 16px;/*字体大小*/
+    transition: all 0.3s;/*过渡动画效果*/
+}
+/* 搜索框聚焦状态 */
+.input-group input:focus{
+    border-color: var(--parmary-color);/*蓝色边框*/
+    outline: none;/*移除默认轮廓*/
+    box-shadow: 0 0 0 2px rgba(24,144,255,0.2);/*蓝色发光效果*/
+}
+/* 搜索按钮样式 */
+.search-btn{
+    background: var(--parmary-color);/*主题蓝色背景*/
+    color:#fff;/*白色文字*/
+    width: 100%;/*宽度充满容器*/
+    padding: 14px;/*内边距*/
+    border: none;/*无边框*/
+    border-radius: 8px;/*圆角*/
+    font-size: 16px;/*字体大小*/
+    font-weight: 500;/*中等字重*/
+    margin-top: 1rem;/*顶部间距16px*/
+    cursor: pointer;/*手型光标*/
+    transition: opacity 0.3s;/*透明度过渡效果*/
+}
+/*按钮按下状态*/
+.search-btn:active{
+    opacity: 0.8;/*透明度变化实现点击反馈*/
+}
+/* 底部导航栏 */
+.bottom-nav{
+    position: fixed;/*固定定位*/
+    bottom: 0;/*贴近底部*/
+    left: 0;/*左侧对齐*/
+    right: 0;/*右侧对齐*/
+    background: #fff;/*白色背景*/
+    display: flex;/*弹性布局*/
+    justify-content: space-around;/*均匀分布子元素*/
+    padding: 12px 0;/*垂直内边距*/
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.05);/*顶部阴影*/
+    border-top: 1px solid var(--border-color);/*顶部边框*/
+}
+/* 导航项样式 */
+.nav-item{
+    display: flex;/*弹性布局*/
+    flex-direction: column;/*垂直排列*/
+    align-items: center;/*水平居中*/
+    padding: 8px 12px;/*内边距*/
+    color: #666;/*文字颜色*/
+    font-size: 0.9rem;/*14.4px*/
+    border-radius: 8px;/*圆角*/
+    transition: all 0.3s;/*过渡效果*/
+}
+/* 激活状态导航项 */
+.nav-item.active{
+    color: var(--parmary-color);/*主题色文字*/
+    background: #e6f7ff;/*浅蓝色背景*/
+}

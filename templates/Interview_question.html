@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI面试问答</title>
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background: #F8F9FA;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* 头部样式 */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #1A73E8;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        /* 面试官卡片 */
+        .interviewer-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(26, 115, 232, 0.1);
+            display: flex;
+            align-items: center;
+        }
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #e8f0fe  center/cover;
+            margin-right: 20px;
+        }
+        .bubble {
+            position: relative;
+            background: #1A73E8;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            max-width: 600px;
+        }
+
+        /* 问题区域 */
+        .question-section {
+            background: white;
+            border: 1px solid #DEE2E6;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        .question-header {
+            color: #1A73E8;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .question-number {
+            background: #E8F0FE;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+
+        /* 回答区域 */
+        .answer-area {
+            width: 100%;
+            height: 200px;
+            padding: 15px;
+            border: 1px solid #DEE2E6;
+            border-radius: 8px;
+            margin: 15px 0;
+            resize: vertical;
+            background: #F8F9FA;
+        }
+
+        /* 按钮组 */
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+        .btn {
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-primary {
+            background: #1A73E8;
+            color: white;
+            border: none;
+        }
+        .btn-primary:hover {
+            background: #1557B0;
+        }
+        .btn-secondary {
+            background: white;
+            color: #1A73E8;
+            border: 1px solid #1A73E8;
+        }
+        .btn-secondary:hover {
+            background: #E8F0FE;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>超级面试官</h1>
+        <p>AI智能面试系统</p>
+    </div>
+
+    <div class="interviewer-card">
+        <div class="avatar">
+            <img src="/static/images/interviewer.png" alt="AI面试官" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+        </div>
+        <div class="bubble">"请认真回答以下问题，系统会自动分析您的回答质量。回答完之后按回车键进入下一题"</div>
+    </div>
+
+
+
+    <div class="question-section">
+        <div class="question-header">
+            <h3>📝 面试问题</h3>
+            <span class="question-number">第 1/5 题</span>
+        </div>
+        <p id="question-text">请描述您在过往工作中遇到的最大挑战，以及您是如何克服的？</p>
+
+        <textarea
+            class="answer-area" id="answer-input"
+            placeholder="请输入您的回答（建议300以内）..."
+        ></textarea>
+    </div>
+
+    <div class="action-buttons">
+        <button class="btn btn-secondary" id="previous">上一题</button>
+        <div>
+            <button class="btn btn-primary btn-next" id="next">保存并继续</button>
+            <button class="btn btn-secondary" style="margin-left: 10px;" id="skip">跳过本题</button>
+        </div>
+    </div>
+
+    <!-- 结束面试区域 -->
+  <div class="question-section question-section-all" style="text-align: center; margin-top: 40px; display: none;">
+    <h3>🎉 已完成所有面试问题</h3>
+    <p>感谢您的认真回答，系统正在生成评估报告...</p>
+  <input type="text" style="display: none"  id="jjobName" value="{{ jobName }}">
+        <button class="btn btn-primary btn-submit" style="margin-top: 20px; padding: 15px 40px;">
+            结束面试并查看结果
+        </button>
+
+</div>
+
+<script>
+    // 问题数据存储
+    const questions = {{ question|tojson }};
+    // ['问题1','问题2','问题3','问题4','问题5',];
+
+    let currentQuestionIndex = 0;  // 当前问题索引（从0开始）
+    const totalQuestions = questions.length;  // 总问题数
+
+    // 初始化问题列表
+    const questionList = questions;
+
+    // DOM元素缓存
+    const questionSections = document.querySelectorAll('.question-section');
+    const questionNumberElement = document.querySelector('.question-number');
+    const questionTextElement = document.getElementById('question-text');
+    const answerInputElement = document.getElementById('answer-input');
+    const nextButton = document.getElementById('next');
+    const previousButton = document.getElementById('previous');
+    const skipButton = document.getElementById('skip');
+    const completionSection = document.querySelector('.question-section-all');
+    const jjobName = document.getElementById('jjobName').value;
+
+    // 答案存储对象
+    const answers = {};
+
+    // 更新当前问题显示
+    function updateCurrentQuestion() {
+        const currentQuestion = questionList[currentQuestionIndex];
+        questionNumberElement.textContent = `第 ${currentQuestionIndex + 1}/${totalQuestions} 题`;
+        questionTextElement.textContent = currentQuestion;
+        answerInputElement.value = answers[currentQuestion] || '';
+
+        // 隐藏完成提示框
+        completionSection.style.display = 'none';
+    }
+
+    // 提交答案
+    function handleSubmitAnswer() {
+        const currentQuestion = questionList[currentQuestionIndex];
+        const answer = answerInputElement.value.trim();
+
+        if (!answer) {
+            alert('请填写答案');
+            return;
+        }
+
+        answers[currentQuestion] = answer;
+        answers['jjobName'] = jjobName
+
+        // 判断是否是最后一题
+        if (currentQuestionIndex === totalQuestions - 1) {
+            // 隐藏所有问题部分，显示完成提示框
+            questionSections.forEach(section => {
+                section.style.display = 'none';
+            });
+            completionSection.style.display = 'block';
+        } else {
+            // 移动到下一题
+            currentQuestionIndex++;
+            updateCurrentQuestion();
+        }
+    }
+
+    // 提交所有答案
+    function submitAllAnswers() {
+    // 创建一个隐藏的表单
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/InterviewResults';
+
+    // 创建隐藏输入字段来存储JSON数据
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'data';
+    input.value = JSON.stringify(answers);
+
+    // 将输入字段添加到表单中
+    form.appendChild(input);
+
+    // 将表单添加到页面并提交
+    document.body.appendChild(form);
+    form.submit();
+}
+
+
+    // 切换问题
+    function nextQuestion() {
+        if (currentQuestionIndex < totalQuestions - 1) {
+            currentQuestionIndex++;
+            updateCurrentQuestion();
+        }
+    }
+
+    function previousQuestion() {
+        if (currentQuestionIndex > 0) {
+            currentQuestionIndex--;
+            updateCurrentQuestion();
+        }
+    }
+
+    // 事件监听
+    previousButton.addEventListener('click', previousQuestion);
+    nextButton.addEventListener('click', handleSubmitAnswer);
+    skipButton.addEventListener('click', nextQuestion);
+
+    // 初始化
+    updateCurrentQuestion();
+
+    // 为“结束面试并查看结果”按钮添加点击事件
+    document.querySelector('.btn-submit').addEventListener('click', () => {
+        submitAllAnswers();
+    });
+</script>
+
+
+</body>
+</html>

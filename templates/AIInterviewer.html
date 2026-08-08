@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI面试助手</title>
+    <link rel="stylesheet" href="../static/css/index.css">
+    <style>
+        /* 保持你原有的样式不变 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background: #F8F9FA;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        .header h1 {
+            color: #1A73E8;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .interviewer-card {
+            background: white;
+            border-radius: 12px;
+            padding: 10px;
+            margin-bottom: 5px;
+            box-shadow: 0 2px 8px rgba(26, 115, 232, 0.1);
+            display: flex;
+            align-items: center;
+        }
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #e8f0fe;
+            margin-right: 20px;
+        }
+        .bubble {
+            position: relative;
+            background: #1A73E8;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            max-width: 400px;
+        }
+        .bubble::after {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 20px;
+            border: 10px solid transparent;
+            border-right-color: #1A73E8;
+        }
+
+        .upload-area {
+            border: 2px dashed #1A73E8;
+            background: #F8F9FF;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .upload-area:hover {
+            background: #E8F0FE;
+        }
+        .upload-area.dragover {
+            border-color: #0d62c9;
+            background: #e6f2ff;
+        }
+
+        .form-section {
+            background: white;
+            border: 1px solid #DEE2E6;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            color: #495057;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #DEE2E6;
+            border-radius: 6px;
+            font-size: 14px;
+            background: #F8F9FA;
+            margin-bottom: 15px;
+        }
+
+        .btn-primary {
+            background: #1A73E8;
+            width: 100%;
+            color: white;
+            border: none;
+            margin-top: 10px;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 16px;
+        }
+        .btn-primary:hover {
+            background: #1557B0;
+        }
+        .btn-primary:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .file-name {
+            display: block;
+            margin: 10px 0;
+            color: #0d62c9;
+            font-weight: 500;
+            padding: 8px 12px;
+            background: #e6f2ff;
+            border-radius: 6px;
+        }
+
+        .message-box {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4caf50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+            text-align: center;
+        }
+        .message-box.error {
+            background-color: #f44336;
+        }
+
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+        }
+        .nav-item a {
+            text-decoration: none;
+            color: #333;
+        }
+        .nav-item.active a {
+            color: #1A73E8;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>超级面试官</h1>
+        <p>AI面试助手</p>
+    </div>
+
+    <div class="interviewer-card">
+        <div class="avatar">
+            <img src="/static/images/interviewer.png" alt="AI面试官" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+        </div>
+        <div class="bubble">"您好，请上传简历，我将为您生成个性化的面试问题！"</div>
+    </div>
+
+    <form id="interview-form" action="/InterviewQuestion" method="post" enctype="multipart/form-data">
+        <div class="form-section">
+            <div class="upload-section">
+                <label class="upload-area">
+                    <input type="file" id="resume-file" name="file" hidden accept=".pdf,.doc,.docx">
+                    <div class="upload-content">
+                        <h3>📤 上传简历</h3>
+                        <p class="upload-hint">（拖拽文件至此或点击上传）</p>
+                        <span class="file-name" id="file-name-display">尚未选择文件</span>
+                        <p class="upload-hint">支持格式：PDF/DOCX，最大20MB</p>
+                    </div>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label for="job-name">请选择您要应聘的岗位</label>
+                <input type="text" id="job-name" name="jobName" placeholder="输入岗位名称，如：产品经理、前端工程师..." required>
+            </div>
+
+            <div class="form-group">
+                <label for="work-experience">请选择您的工作经验</label>
+                <select id="work-experience" name="workExperience" required>
+                    <option value="">请选择工作经验</option>
+                    <option value="应届生">应届生</option>
+                    <option value="1-3年">1-3年</option>
+                    <option value="3-5年">3-5年</option>
+                    <option value="5年以上">5年以上</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-primary" id="submit-btn">
+                🎯 AI模拟面试
+            </button>
+        </div>
+    </form>
+
+    <div id="message-box" class="message-box"></div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item">
+            <a href="/ResumeAnalysis"><span>简历分析</span></a>
+        </div>
+        <div class="nav-item active">
+            <a href="/AIInterviewer"><span>AI超级面试官</span></a>
+        </div>
+        <div class="nav-item">
+            <a href="/search_job"><span>查找工作</span></a>
+        </div>
+    </nav>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const uploadArea = document.querySelector('.upload-area');
+            const fileInput = document.getElementById('resume-file');
+            const fileNameDisplay = document.getElementById('file-name-display');
+            const messageBox = document.getElementById('message-box');
+            const interviewForm = document.getElementById('interview-form');
+            const submitBtn = document.getElementById('submit-btn');
+
+            // 拖拽功能
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    // 创建 DataTransfer 来设置文件
+                    const dt = new DataTransfer();
+                    dt.items.add(files[0]);
+                    fileInput.files = dt.files;
+
+                    handleFile(files[0]);
+                }
+            });
+
+            // 文件选择变化
+            fileInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    handleFile(this.files[0]);
+                }
+            });
+
+            function handleFile(file) {
+                // 允许的文件类型
+                const allowedTypes = [
+                    'application/pdf',
+                    'application/msword',
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                ];
+
+                // 文件扩展名检查
+                const fileExtension = file.name.split('.').pop().toLowerCase();
+                const allowedExtensions = ['pdf', 'doc', 'docx'];
+
+                // 最大文件大小 (20MB)
+                const maxSize = 20 * 1024 * 1024;
+
+                // 验证文件类型
+                if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(fileExtension)) {
+                    showMessage('不支持的文件类型，请上传PDF或Word文档', true);
+                    resetFileInput();
+                    return;
+                }
+
+                // 验证文件大小
+                if (file.size > maxSize) {
+                    showMessage('文件大小超过20MB限制', true);
+                    resetFileInput();
+                    return;
+                }
+
+                // 显示文件名
+                fileNameDisplay.textContent = file.name;
+                fileNameDisplay.style.color = '#0d62c9';
+
+                // 显示成功消息
+                showMessage('文件准备就绪，可以开始模拟面试');
+            }
+
+            function resetFileInput() {
+                fileInput.value = '';
+                fileNameDisplay.textContent = '尚未选择文件';
+                fileNameDisplay.style.color = '#5f6368';
+            }
+
+            function showMessage(message, isError = false) {
+                messageBox.textContent = message;
+                messageBox.className = isError ? 'message-box error' : 'message-box';
+                messageBox.style.display = 'block';
+
+                setTimeout(() => {
+                    messageBox.style.display = 'none';
+                }, 4000);
+            }
+
+            // 表单提交验证
+            interviewForm.addEventListener('submit', function(e) {
+                const file = fileInput.files[0];
+                const jobName = document.getElementById('job-name').value.trim();
+                const workExperience = document.getElementById('work-experience').value;
+
+                if (!file) {
+                    e.preventDefault();
+                    showMessage('请选择简历文件', true);
+                    return;
+                }
+
+                if (!jobName) {
+                    e.preventDefault();
+                    showMessage('请输入目标岗位', true);
+                    return;
+                }
+
+                if (!workExperience) {
+                    e.preventDefault();
+                    showMessage('请选择工作经验', true);
+                    return;
+                }
+
+                // 显示加载状态
+                submitBtn.innerHTML = '⏳ 生成面试问题中...';
+                submitBtn.disabled = true;
+            });
+        });
+    </script>
+</body>
+</html>

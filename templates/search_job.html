@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- 移动端视口设置，禁止用户缩放 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>超级面试官-首页</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}" >
+    <style>
+        /* 新增：响应式容器 */
+        .container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 0 16px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body align="center">
+    <div class="container">
+    <!-- 网页的头部 -->
+    <header class="header">
+        <!-- 主标题 -->
+        <h1>超级面试官</h1>
+        <!-- 副标题 -->
+        <p>超级面试官</p>
+    </header>
+    <!-- 网页正文 -->
+    <main class="main-content">
+
+        <!-- 搜索面板容器 -->
+        <form action="/sea_job" method="post" onsubmit="return validateForm()">
+        <div class="search-group">
+            <!-- 岗位输入框 -->
+            <div class="input-group">
+                <input type="text" placeholder="请输入您要搜索的岗位" name="jobName">
+            </div>
+            <!-- 最低薪资输入框 -->
+            <div class="input-group">
+                <input type="text" placeholder="请输入您期望的最低薪资" name="salaryMin">
+            </div>
+            <!-- 城市输入框 -->
+            <div>
+                <select class="input-group" name="workExperience">
+                    <option value="" disabled selected>请选择你的工作经验</option>
+                    <option value="1">无经验</option>
+                    <option value="2">1年以下</option>
+                    <option value="3">1-3年</option>
+                    <option value="4">3-5年</option>
+                    <option value="5">5-10年</option>
+                    <option value="6">10年以上</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <input type="text" placeholder="请输入城市，不填写默认搜索全部" name="city">
+            </div>
+            <div class="input-group">
+                <input type="text" placeholder="请输入公司名称，不填写默认搜索全部" name="companyName">
+            </div>
+            <div class="input-group">
+                <select class="input-group" name="education">
+                    <option value="" disabled selected>请选择您的学历</option>
+                    <option value="6">大专</option>
+                    <option value="7">本科</option>
+                    <option value="8">硕士</option>
+                    <option value="11">博士</option>
+                </select>
+            </div>
+            <!-- 搜索触发按钮 -->
+            <input type="submit" class="search-btn" value="开始搜索岗位">
+        </div>
+        </form>
+    </main>
+    <!-- 底部导航栏 -->
+    <nav class="bottom-nav">
+        <div class="nav-item">
+            <a href="/ResumeAnalysis"><span>简历分析</span></a>
+        </div>
+        <div class="nav-item">
+            <a href="/AIInterviewer"><span>AI超级面试官</span></a>
+        </div>
+        <div class="nav-item active">
+            <span>查找工作</span>
+        </div>
+    </nav>
+    </div>
+<!-- JavaScript 代码需要写在script脚本标签中 -->
+<script>
+    //底部导航切换逻辑
+    // document.querySelectorAll('.nav-item').forEach(item => {
+    //     item.addEventListener('click',() =>{
+    //         //移除当前激活项的active类
+    //         document.querySelector('.nav-item.active').classList.remove('active');
+    //         //为点击项添加active类
+    //         item.classList.add('active');
+    //     });
+    // });
+
+    function validateForm() {
+            // 获取名为 workExperience 的 select 元素
+            var workExperience = document.getElementsByName('workExperience')[0];
+            var jobName = document.getElementsByName('jobName')[0];
+            var salaryMin = document.getElementsByName('salaryMin')[0];
+            var education = document.getElementsByName('education')[0];
+            console.log(education)
+            console.log(workExperience)
+            // 检查 select 元素的值是否为空
+            if (workExperience.value === "" || jobName.value === "" || salaryMin.value === ""
+                                || education.value === "") {
+                // 如果为空，弹出提示框
+                alert("请完整填写表单！");
+                // 返回 false 阻止表单提交
+                return false;
+            }
+            // 如果不为空，返回 true 允许表单提交
+            return true;
+        }
+</script>
+</body>
+</html>

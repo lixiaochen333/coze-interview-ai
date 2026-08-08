@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>面试结果分析</title>
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background: #F8F9FA;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* 结果概览 */
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(26, 115, 232, 0.1);
+            text-align: center;
+        }
+        .score {
+            color: #1A73E8;
+            font-size: 48px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        .score-bar {
+            height: 8px;
+            background: #E8F0FE;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .score-progress {
+            height: 100%;
+            background: #1A73E8;
+            border-radius: 4px;
+            transition: 1s;
+        }
+
+        /* 分析模块 */
+        .analysis-section {
+            background: white;
+            border: 1px solid #DEE2E6;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 15px 0;
+        }
+        .section-title {
+            color: #1A73E8;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .section-title img {
+            width: 24px;
+            margin-right: 10px;
+        }
+
+        /* 具体分析项 */
+        .analysis-item {
+            margin: 15px 0;
+            padding: 15px;
+            border-left: 3px solid #1A73E8;
+            background: #F8F9FF;
+        }
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            margin: 5px 0;
+        }
+        .improve-tag { background: #FFF3CD; color: #856404; }
+        .strength-tag { background: #D4EDDA; color: #155724; }
+
+        /* 按钮样式 */
+        .action-buttons {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .btn {
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin: 0 10px;
+        }
+        .btn-primary {
+            background: #1A73E8;
+            color: white;
+            border: none;
+        }
+        .btn-primary:hover {
+            background: #1557B0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="summary-card">
+    <h2>面试结果总览</h2>
+    <div class="score">{{ score }}</div>
+    <div class="score-bar">
+        <div class="score-progress"></div>
+    </div>
+    <p>岗位匹配度：{{ score }}%</p>
+</div>
+
+<div class="analysis-section">
+    <div class="section-title">
+        <img src="../static/images/icons8-statistics-48.png" alt="分析">
+        <h3>回答内容分析</h3>
+    </div>
+    <div class="analysis-item">
+        {{ jg["回答内容分析"] }}
+    </div>
+</div>
+
+<div class="analysis-section">
+    <div class="section-title">
+        <img src="../static/images/icons8-improve-64.png" alt="优化">
+        <h3>改进建议</h3>
+    </div>
+    <div class="analysis-item">
+        <p>{{ jg["改进建议"] }}</p>
+    </div>
+</div>
+
+<div class="analysis-section">
+    <div class="section-title">
+        <img src="../static/images/icons8-leaderboard-80.png" alt="结果">
+        <h3>最终评估结果</h3>
+    </div>
+    <p>🏆综合评分：{{ jg["综合评估结果"] }}分</p>
+    <div class="action-buttons">
+        <a href="/AIInterviewer"><button class="btn btn-primary">预约模拟面试</button></a>
+    </div>
+</div>
+</body>
+</html>
