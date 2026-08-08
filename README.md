@@ -1,100 +1,132 @@
 # Coze-AI-Interviewer｜AI 智能面试助手
 
 基于 Flask + Coze 扣子工作流搭建的端到端 AI 模拟面试系统，面向求职者提供简历诊断、个性化面试出题、面试作答量化评估全链路服务。
+
 适合应届生自测、求职模拟面试，同时可作为大模型应用开发实战项目。
 
 
 
-项目简介
+## 项目简介
+
 本项目依托 Coze 平台大模型工作流能力，搭建轻量化 Web 面试系统。用户上传简历并填写目标岗位，系统自动完成简历适配分析、生成定制面试题，针对作答内容进行多维度打分并输出标准化面试评估报告。
+
 项目实现前后端基础交互、大模型 API 封装、提示词工程管理，完整体现 LLM 应用开发流程，适合展示 Python 后端、大模型调用、提示词工程实战能力。
 
 
 
-✨ 核心功能
+## ✨ 核心功能
+
 **简历解析模块**
+
 上传简历文本，结合目标岗位 JD 进行匹配分析，输出简历优缺点与优化建议。
+
 **个性化面试题生成模块**
+
 根据岗位信息、简历背景、工作年限动态生成岗位相关面试试题，输出结构化 JSON。
+
 **面试作答评估模块**
+
 接收面试问题与候选人回答，从专业能力、项目经验、沟通表达、求职动机多维度量化评分，生成面试评估报告。
+
 **Web 可视化交互页面**
+
 提供浏览器端操作界面，完整串联「简历上传→出题→作答→评估」业务流程。
 
 
 
-🛠️ 技术栈
+## 🛠️ 技术栈
+
 **后端**：Python Flask
+
 **大模型能力**：Coze 扣子平台工作流 API（豆包大模型）
+
 **前端**：原生 HTML
+
 **工程管理**：提示词文件统一管理、模块化接口封装
+
 **文档规范**：Markdown 统一管理提示词、报告模板、工作流文档
 
 
 
-## 📂 项目目录结构
-
+## 📁 项目目录结构
+```
 coze-interview-ai/
-├── api/                                                       # Coze工作流接口封装模块
-├── config/                                                  # 系统配置、提示词工程文件
-│   ├── system-intro.md                               # 系统模块整体说明
-│   ├── prompt-resume-analyze.md              # 简历解析提示词
-│   ├── prompt-question-generate.md          # 面试题目生成提示词
-│   ├── prompt-report-score.md                   # 面试打分提示词
-│   └── workflow-node.md                           # Coze工作流节点说明文档
-├── docs/                                                     # 辅助文档与模板
-│   ├── interview-report-template.md           # 面试评估报告模板
-│   └── demo-jd.txt                                      # 岗位JD测试样例
-├── static/                                                    # 静态资源（图片、样式）
-│   └── images/
-│       └── interviewer.png                             # AI面试官头像
-├── templates/                                             # Flask前端HTML模板
-├── app.py                                                   # Flask项目启动入口
-├── requirements.txt                                     # Python依赖清单
-├── .gitignore                                               # Git忽略文件
-└── README.md                                           # 项目说明文档
+├── api/                # Coze工作流接口封装模块
+├── config/             # 系统配置、提示词工程文件
+│   ├── system-intro.md             # 系统模块整体说明
+│   ├── prompt-resume-analyze.md    # 简历解析提示词
+│   ├── prompt-question-generate.md # 面试题目生成提示词
+│   ├── prompt-report-score.md      # 面试打分提示词
+│   └── workflow-node.md            # Coze工作流节点说明文档
+├── docs/               # 文档、模板、测试样例
+│   ├── interview-report-template.md # 面试评估报告模板
+│   └── demo-jd.txt                 # 岗位JD测试样例
+├── static/             # 静态资源（图片、样式）
+│   ├── css/                        # 样式文件
+│   └── images/                     # 图片资源
+├── templates/          # HTML 前端页面
+├── tools/              # 工具脚本
+├── .gitignore          # Git 忽略文件配置
+├── app.py              # Flask 项目入口
+├── README.md           # 项目说明文档
+└── requirements.txt    # Python 依赖清单 
+```
 
 
 
 ## 🚀 本地部署运行
 
 1. **环境依赖安装**
-bash
+
+```bash
 pip install flask requests
+```
+
 2. **Coze 平台前置配置**
+
 登录 Coze 扣子平台，生成个人访问令牌（PAT）；
+
 根据 config/workflow-node.md 搭建对应工作流；
+
 将 config 目录下提示词内容录入工作流大模型节点。
+
 3. **项目启动**
+
 在接口文件中填入 Coze PAT、工作流 ID 等密钥信息；
 启动服务：
-bash
+
+```bash
 python app.py
+```
+
 浏览器访问本地地址，即可进入 AI 面试系统。
 
 
 
-📌 项目亮点
+## 📌 项目亮点
+
 **提示词工程规范化**：将提示词抽离为独立配置文件，方便迭代调试，实现业务代码与 Prompt 解耦；
+
 **结构化输出约束**：通过 Prompt 强制模型返回标准 JSON，规避自由文本导致程序解析失败；
+
 **模块化设计**：接口层、配置层、视图层分离，易于新增业务模块；
+
 **完整业务链路**：覆盖 LLM 应用典型场景：文档解析→内容生成→结果评估，贴近真实大模型应用开发需求；
+
 **轻量化 Web 落地**：基于 Flask 快速搭建可用 Web 服务，实现从接口调用到前端可视化闭环。
 
 
 
-❗ 常见问题
+## ❗ 常见问题
+
 **接口鉴权失败**：检查 Coze PAT 是否有效，密钥配置是否正确；
+
 **模型返回格式异常**：核对提示词中 JSON 输出约束，检查 Prompt 是否被修改；
+
 **静态资源加载失败**：确认图片路径与 HTML 引用路径保持一致。
 
 
 
-⚠️ 注意事项
-密钥、个人访问令牌请勿提交至代码仓库；所有敏感配置建议通过环境变量管理。
+## 📌 作者信息
 
-
-
-📌 作者信息
 昵称：lixiaochen333
-
